@@ -1,0 +1,35 @@
+public class PlayerStatus_main {
+
+	public static void main(String[] args) {
+		
+		PlayerStatus Player1 = new PlayerStatus();
+		PlayerStatus oponent = new PlayerStatus();
+		
+		
+		Player1.initPlayer("laura",3,15000);
+		oponent.initPlayer("mihai",2,12000);
+		Player1.setWeaponInHand("knife");
+		oponent.setWeaponInHand("sniper");
+		Player1.setPositionX(22.5);
+		Player1.setPositionY(33.5);
+		oponent.setPositionX(27.5);
+		oponent.setPositionY(38.5);
+						
+		Player1.movePlayerTo(100.2,200.5);
+		oponent.movePlayerTo(300.5,500.4);
+		
+		oponent.getNickname();
+		Player1.getNickname();
+		
+		Player1.shouldAttackOpponent(oponent);
+								
+		System.out.println(Player1.setWeaponInHand("knife"));
+		System.out.println(oponent.setWeaponInHand("sniper"));
+		
+		System.out.println(oponent.getNickname());
+		System.out.println(Player1.getNickname());
+		
+		System.out.println(Player1.shouldAttackOpponent(oponent));
+	
+	}
+}
