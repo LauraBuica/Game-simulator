@@ -1,0 +1,209 @@
+public class PlayerStatus {
+
+	private String nickname;
+	private int score;
+	private int lives;
+	private int health;
+	private String weaponInHand;
+	private double positionX;
+	private double positionY;
+	private static String gameName;
+
+	public PlayerStatus() {
+	}
+
+	public void initPlayer(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public void getinitPlayer(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public void initPlayer(String nickname, int lives) {
+		this.nickname = nickname;
+		this.lives = lives;
+	}
+
+	public void initPlayer(String nickname, int lives, int score) {
+		this.nickname = nickname;
+		this.lives = lives;
+		this.score = score;
+	}
+
+	private static boolean isEven(int artifactCode) {
+		if(artifactCode%2==0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private static boolean divWith3(int artifactCode) {
+		int sum=0;
+		while(artifactCode!=0) {
+			int digit = artifactCode%10;
+			sum += digit;
+			artifactCode/=10;
+		}
+		if (sum % 3==0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private static boolean isPrime(int artifactCode) {
+		for( int i=2; i<artifactCode; i++) {
+			if(artifactCode%i == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean isPerfect(int artifactCode) {
+		int sum=0;
+		for(int i=1; i<artifactCode; i++) {
+			if(artifactCode%i == 0) {
+				sum+=i;
+			}
+
+		}
+		if(sum==artifactCode) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void findArtifact(int artifactCode){
+		if (isPerfect(artifactCode)) {
+			score += 5000;
+			lives +=1;
+			health = 100;
+		} else if (isPrime(artifactCode)) {
+			score += 1000;
+			lives +=2;
+			if (health<=100 && health >=75) {
+				health = health + (100 - health);
+			} else if (health<75){
+				health += 25;
+			} else {
+				health = 100;
+			}
+		} else if (isEven(artifactCode) && divWith3(artifactCode)) {
+			score -= 3000;
+			health -= 25;
+			if (health <=0) {
+				lives--;
+				health = 100;
+				if(lives==0) {
+					System.out.print("Game over");
+				}
+			}
+		} else {
+			score += artifactCode;
+		}
+
+	}
+
+	private boolean isAValidWeapon(String weaponInHand) {
+		if(weaponInHand.equals("knife") || weaponInHand.equals("sniper") || weaponInHand.equals("kalashnikov")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean setWeaponInHand(String weaponInHand) {
+		if(!isAValidWeapon(weaponInHand)) {
+			return false;
+		}
+		if(this.score>=20000) {
+			this.weaponInHand = weaponInHand;
+			this.score -= 20000;
+			return true;
+		} else if (this.score>=10000) {
+			this.weaponInHand= weaponInHand;
+			this.score -= 10000;
+			return true;
+		} else if (this.score>=1000) {
+			this.weaponInHand = weaponInHand;
+			this.score -= 1000;
+			return true;
+		} else {
+			System.out.println("Nu exista puncte disponibile pentru achizitie");
+			return false;
+		}
+	}
+
+	public String getWeaponInHand() {
+		return weaponInHand;
+	}
+
+	public double getPostionX() {
+		return positionX;
+	}
+
+	public void setPositionX(double positionX) {
+		this.positionX = positionX;
+	}
+
+	public double getPositionY() {
+		return positionY;
+	}
+
+	public void setPositionY(double positionY) {
+		this.positionY = positionY;
+	}
+
+	
+	protected static String getgameName(){
+		return gameName;
+	}
+
+	protected static void setgameName(String newgameName) {
+		gameName = newgameName;
+	}
+
+	public void movePlayerTo(double positionXupdated , double positionYupdated) {
+		this.positionX = positionXupdated;
+		this.positionY = positionYupdated;
+	}
+
+	protected String getNickname(){
+		return nickname;
+	}
+
+	private double distanceBetweenTwoPlayers(double positionX1,double positionY1,double positionX2,double positionY2) {
+		return Math.sqrt((positionX1-positionX2)*(positionX1-positionX2) + (positionY1-positionY2)*(positionY1-positionY2));
+
+	}
+
+	public boolean shouldAttackOpponent(PlayerStatus oponent) {
+		double distanta = distanceBetweenTwoPlayers(this.positionX, this.positionY, oponent.positionX, oponent.positionY);
+		
+		if (this.weaponInHand.equals(oponent.weaponInHand)) {
+			int p1 = (3 * this.health + this.score / 1000) / 4;
+			int p2 = (3 * oponent.health + oponent.score / 1000) / 4;
+			if(p1>p2) {
+				return true;
+			} 
+			return false;
+		}
+		
+		if	(distanta>1000) {
+			
+			if (this.weaponInHand.equals("sniper") || this.weaponInHand.equals("kalashnikov") && oponent.weaponInHand.equals("knife")) {
+				return true;
+			}
+			return false;
+		}
+			
+		if (this.weaponInHand.equals("kalashnikov") || this.weaponInHand.equals("sniper") && oponent.weaponInHand.equals("knife")) {
+			return true;
+		}
+		return false;
+	}
+}
